@@ -10,6 +10,8 @@ import Search from '../views/Search';
 import NowPlaying from '../views/Films/NowPlaying';
 import ComingSoon from '../views/Films/ComingSoon';
 import NowPlayChild from '../views/Films/NowPlayChild'
+import Detail from '../views/Detail';
+import Login from '../views/Login'
 export default function MRouter() {
   return (
     <div>
@@ -30,10 +32,15 @@ export default function MRouter() {
           </Route>
           <Route path='comingSoon' element={<ComingSoon></ComingSoon>}></Route>
         </Route>
-        <Route path='/center' element={<Center></Center>}></Route>
+        {/* //+ 在v5的版本中，权限判断是通过一个render函数来进行的，路由更改的时候，render会重新执行，所以授权能够完成，但是这种三目运算只会执行一次 */}
+        {/* <Route path='/center' element={isAuth() ? <Center></Center> : <Redirect to='/login'></Redirect>}></Route> */}
+        <Route path='/center' element={<AuthComponent><Center></Center></AuthComponent>}></Route>
         <Route path='/cinema' element={<Cinema></Cinema>}></Route>
         <Route path='/cinema/search' element={<Search></Search>}></Route>
         <Route path='/blank' element={<Blank></Blank>}></Route>
+        <Route path='/login' element={<Login></Login>}></Route>
+        {/* 动态路由 */}
+        <Route path='/detail/:id' element={<Detail></Detail>}></Route>
         {/* //= 第一种方式 有点类似重定向 */}
         {/* <Route path='*' element={<Navigate to='/film' replace={true}></Navigate>}></Route> */}
         {/* //= 第二种方式 使用useNavigate 自己封装 */}
@@ -42,4 +49,12 @@ export default function MRouter() {
       </Routes>
     </div>
   )
+}
+const isAuth = () => {
+  return window.localStorage.getItem('test_token')
+}
+function AuthComponent(props) {
+  // ~ 核心原理就是运用了函数会再次执行的特性
+  const isLogin = window.localStorage.getItem('test_token')
+  return isLogin ? props.children : <Redirect to='/login'></Redirect>
 }
