@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import WithRouter from '../../components/WithRouter'
 
-export default class FilmItemClass extends Component {
+class FilmItemClass extends Component {
   constructor(props) {
     super(props)
+    // console.log(this.props);
     this.state = {
       list: []
     }
@@ -16,3 +18,4 @@ export default class FilmItemClass extends Component {
     )
   }
 }
+export default WithRouter(FilmItemClass)
